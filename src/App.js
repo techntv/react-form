@@ -13,6 +13,10 @@ class MainInterface extends Component {
       data: data 
     }
   }
+
+  deleteItem(id){
+    console.log('click delete ' + id);
+  }
   
   render() {    
     return (
@@ -20,7 +24,7 @@ class MainInterface extends Component {
         <div className="item-list media-list">
           <ul className="item-list media-list">   
           {
-            this.state.data.map((item, index) =>  <AptList data={item} key={index}/>)
+            this.state.data.map((item, index) =>  <AptList data={item} key={index} index={index} onDelete={this.deleteItem.bind(this)}/>)
           }        
           </ul>
         </div>
