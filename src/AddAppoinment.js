@@ -8,6 +8,19 @@ class AddAppointment extends React.Component{
     toogleAppointment(){
         this.props.onToogleAppointment();
     }
+
+    handleSubmit(event){
+        event.preventDefault();
+        
+        let tempInput = {
+            petName: this.refs.inputPetName.value,
+            ownerName: this.refs.inputOwnerName.value,
+            aptDate: this.refs.inputAptDate.value + ' ' + this.refs.inputAptTime.value,
+            aptNotes: this.refs.inputAptNotes.value
+        }
+        this.props.addAppointment(tempInput);
+
+    }
     
     render(){
         let displayAppointment = {
@@ -18,7 +31,7 @@ class AddAppointment extends React.Component{
             <div className="panel-heading apt-addheading" onClick={ this.toogleAppointment.bind(this) }>
             <span className="glyphicon glyphicon-plus"></span> Add Appointment</div>
             <div className="panel-body" style={displayAppointment}>
-              <form className="add-appointment form-horizontal">
+              <form className="add-appointment form-horizontal" onSubmit={this.handleSubmit.bind(this)}>
                 <div className="form-group">
                   <label className="col-sm-2 control-label" htmlFor="petName">Pet Name</label>
                   <div className="col-sm-10">
