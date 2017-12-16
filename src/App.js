@@ -15,7 +15,8 @@ class MainInterface extends Component {
       bodyAppointmentVisible: false,
       data: data,
       orderBy: 'petName',
-      orderDir: 'asc'
+      orderDir: 'asc',
+      queryText: ''
     }
   }
 
@@ -41,23 +42,50 @@ class MainInterface extends Component {
       bodyAppointmentVisible: false
     })
   }
-  handleSort(orderBy,orderDir){
-    let tempData = this.state.data;
-   
+
+  handleSort(orderBy, orderDir){
+    this.setState({
+      orderBy: orderBy,
+      orderDir: orderDir
+    })}
+
+    onSearchTitle(query){
+      
+        this.setState({
+          queryText: query
+        })
+    }
+  render() {   
+    let tempData = [];
+    let orderBy = this.state.orderBy;
+    let orderDir = this.state.orderDir;
+    let myApt = this.state.data;
+    let queryText = this.state.queryText;
+
+    myApt.forEach(item => {
+      if (
+        (item.petName.toLowerCase().indexOf(queryText) !==-1) ||
+        (item.ownerName.toLowerCase().indexOf(queryText) !==-1 )||
+        (item.aptNotes.toLowerCase().indexOf(queryText) !==-1 )
+      ){
+        tempData.push(item);
+        
+      }
+    })
+
+    
 
     if(orderDir === 'asc'){
-      tempData.sort((a,b) => {
-        return a[orderBy] - b[orderBy];
+      tempData.sort((a,b) =>{
+        return  a[orderBy].toLowerCase() > b[orderBy].toLowerCase();
       })
     } else if(orderDir === 'desc'){
       tempData.sort((a,b) => {
-        return b[orderBy] - a[orderBy];
+        return b[orderBy].toLowerCase() > a[orderBy].toLowerCase();
       })
     }
     
-  }
-  render() {   
-    let filterApt = this.state.data.map((item, index) =>  <AptList data={item} 
+     let filterApt = tempData.map((item, index) =>  <AptList data={item} 
                                                                     key={index} 
                                                                     index={index} 
                                                                     onDelete={this.deleteItem.bind(this)}/>)
@@ -70,7 +98,8 @@ class MainInterface extends Component {
                         addAppointment={this.addAppointment.bind(this)}/>
         <SearchAppointment handleSort={this.handleSort.bind(this)}
                             orderBy={this.state.orderBy}
-                            orderDir={this.state.orderDir}/>
+                            orderDir={this.state.orderDir}
+                            onSearch = {this.onSearchTitle.bind(this)}/>
           <ul className="item-list media-list">   
           { filterApt }        
           </ul>
